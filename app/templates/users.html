@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Ánalisis de Puestos</title>
+	<meta content="" name="description">
+	<meta content="" name="keywords">
+
+	<!-- Favicons -->
+	<link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+	<link href="{{ url_for('static', filename='img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com" rel="preconnect">
+	<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+		rel="stylesheet">
+
+	<!-- Vendor CSS Files -->
+	<link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='vendor/aos/aos.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+	<!-- Main CSS File -->
+	<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+	<header id="header" class="header d-flex align-items-center sticky-top">
+		<div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+			<a href="{{ url_for('admin.admin') }}" class="logo d-flex align-items-center me-auto">
+				<h1 class="sitename">Administrador</h1>
+			</a>
+
+			<nav id="navmenu" class="navmenu">
+				<ul>
+					<li><a href="{{ url_for('admin.admin') }}">Inicio</a></li>
+					<li><a href="{{ url_for('admin.registro') }}">Registro</a></li>
+					<li class="dropdown"><a href="#" class="active"><span>Listas</span> <i
+								class="bi bi-chevron-down toggle-dropdown"></i></a>
+						<ul>
+							<li><a href="{{ url_for('admin.users') }}">Usuarios</a></li>
+							<li><a href="{{ url_for('admin.admins') }}">Administradores</a></li>
+						</ul>
+					</li>
+				</ul>
+				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+			</nav>
+
+			<a class="btn-getstarted" href="{{ url_for('session.logout') }}">Cerrar Sesión</a>
+
+		</div>
+	</header>
+
+	<main class="main">
+
+		<!-- Hero Section -->
+		<section id="hero" class="section hero">
+
+			<div class="container">
+				<div class="card-header text-center mb-5">
+					<h1>Lista de usuarios</h1>
+				</div>
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<div class="alert alert-info" role="alert">
+					{{ messages[0] }}
+				</div>
+				{% endif %}
+				{% endwith %}
+				<div class="row gy-4">
+					{% for user in users %}
+					<div class="col-md-6 mb-3">
+						<div class="card">
+							<div class="card-header">
+								<h5 class="text-center">{{ user.name }}</h5>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<input type="hidden" class="form-control" value="{{ user.id }}" name="id">
+									<div class="col">
+										<small>Correo</small>
+										<input type="text" class="form-control" value="{{ user.email }}" readonly>
+									</div>
+									<div class="col">
+										<small>Número Telefónico</small>
+										<input type="text" class="form-control" value="{{ user.phone }}" readonly>
+									</div>
+								</div>
+								<form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="post">
+									<button type="submit" class="btn btn-danger btn-delete mt-3">Eliminar</button>
+								</form>
+							
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+
+		</section>
+		<!-- /Hero Section -->
+
+	</main>
+
+	<footer id="footer" class="footer position-relative">
+		<div class="container footer-top">
+			<div class="row gy-4">
+				<div class="col-lg-4 col-md-4 footer-about">
+					<a href="index.html" class="d-flex align-items-center">
+						<span class="sitename">Universidad Tecnológica de Acapulco</span>
+					</a>
+					<div class="footer-contact pt-3">
+						<p>Av. Comandante Bouganville L5</p>
+						<p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
+					</div>
+				</div>
+
+				<div class="col-lg-4 col-md-4 footer-links">
+					<h4>Links útiles</h4>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('admin.admin') }}">Home</a></li>
+						<li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a>
+						</li>
+						<p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
+						<p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
+					</ul>
+				</div>
+
+				<div class="col-lg-4 col-md-4">
+					<h4>Síguenos</h4>
+					<p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate
+						con nosotros en Facebook, Twitter e Instagram </p>
+					<div class="social-links d-flex">
+						<a href=""><i class="bi bi-twitter"></i></a>
+						<a
+							href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i
+								class="bi bi-facebook"></i></a>
+						<a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container copyright text-center mt-4">
+			<p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>All Rights Reserved</span></p>
+			<div class="credits">
+				Diseñado por <a>Angeles Natividad</a>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Scroll Top -->
+	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+			class="bi bi-arrow-up-short"></i></a>
+
+	<!-- Vendor JS Files -->
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/php-email-form/validate.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/aos/aos.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/glightbox/js/glightbox.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.js') }}"></script>
+
+	<!-- Main JS File -->
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
+
+</body>
+
+</html>

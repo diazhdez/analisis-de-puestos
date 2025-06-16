@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Puestos</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/aos/aos.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+    <!-- Header -->
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+            <a href="{{ url_for('user.user') }}" class="logo d-flex align-items-center me-auto">
+                <!-- Uncomment the line below if you also wish to use an image logo -->
+                <!-- <img src="assets/img/logo.png" alt=""> -->
+                <h1 class="sitename">Usuario</h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
+                    <li class="dropdown"><a href="#"><span>Agregar</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="{{ url_for('user.area') }}">Área</a></li>
+                            <li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+                            <li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#"><span>Lista</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="{{ url_for('user.areas') }}">Área</a></li>
+                            <li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+                            <li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+            <a class="btn-getstarted" href="{{ url_for('session.logout') }}">Cerrar Sesión</a>
+
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="small-card">
+                    <div class="card-header text-center mt-4">
+                        <h1>Agregar Puesto</h1>
+                    </div>
+                    <div class="card-body text-center mt-2">
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert-container">
+                            {% for message in messages %}
+                            <div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+                                <p>{{ message }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        <form method="post" action="{{ url_for('user.puesto') }}" enctype="multipart/form-data">
+                            <div class="container">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="nombre_puesto" class="form-label">Nombre del puesto:</label>
+                                            <input type="text" class="form-control" id="nombre_puesto"
+                                                name="nombre_puesto" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="id_departamento" class="form-label">Departamento:</label>
+                                            <select class="form-select" id="id_departamento" name="id_departamento"
+                                                required>
+                                                {% for departamento in departamentos %}
+                                                <option value="{{ departamento.IdDepartamento }}">{{
+                                                    departamento.NombreDepartamento }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="jefe" class="form-label">Jefe:</label>
+                                            <input type="text" class="form-control" id="jefe" name="jefe" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="clave" class="form-label">Clave:</label>
+                                            <input type="text" class="form-control" id="clave" name="clave" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="no_plazas" class="form-label">No. de Plazas:</label>
+                                            <input type="number" class="form-control" id="no_plazas" name="no_plazas"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <div class="form-group mt-3">
+                                                <label for="fecha" class="form-label">Fecha:</label>
+                                                <input type="date" class="form-control" id="fecha" name="fecha"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="ubicacion" class="form-label">Ubicación:</label>
+                                            <div>
+                                                <small id="ubicacion" class="form-text text-muted">Subir imagen en
+                                                    JPG.</small>
+                                            </div>
+                                            <div>
+                                                <img id="previewImage" src="/static/img/ubicacion.jpg"
+                                                    class="img-fluid">
+                                            </div>
+                                            <input type="file" class="form-control mt-3" id="ubicacion" name="ubicacion"
+                                                accept=".jpg" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="Funciones" class="form-label">Funciones Específicas:</label>
+                                            <div>
+                                                <small id="Funciones" class="form-text text-muted">Escribe las funciones
+                                                    específicas separadas por comas.</small>
+                                            </div>
+                                            <textarea class="form-control" id="Funciones" name="Funciones"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="objetivo" class="form-label">Objetivo:</label>
+                                            <textarea type="text" class="form-control" id="objetivo" name="objetivo"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="equipo_trabajo" class="form-label">Equipo de Trabajo:</label>
+                                            <small id="equipo_trabajo" class="form-text text-muted">Escribe el equipo
+                                                de trabajo separado por comas.</small>
+                                            <textarea class="form-control" id="equipo_trabajo" name="equipo_trabajo"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="reemplaza" class="form-label">Reemplaza a:</label>
+                                            <input type="text" class="form-control" id="reemplaza" name="reemplaza"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="reemplazado" class="form-label">Es reemplazado por:</label>
+                                            <input type="text" class="form-control" id="reemplazado" name="reemplazado"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="nota" class="form-label">Nota:</label>
+                                            <textarea class="form-control" id="nota" name="nota"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Relaciones</h2>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <small id="Relaciones" class="form-text text-muted">Escribe las relaciones
+                                                separadas por comas.</small>
+                                            <textarea class="form-control" id="Relaciones" name="Relaciones"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-header text-center mt-4">
+                                    <h3>Condiciones de trabajo</h3>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="esfuerzo_fisico" class="form-label"> Esfuerzo Físico:</label>
+                                            <select id="esfuerzo_fisico" name="esfuerzo_fisico" class="form-select"
+                                                required>
+                                                <option value="Normal">Normal</option>
+                                                <option value="Complejo">Complejo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="esfuerzo_mental" class="form-label"> Esfuerzo Mental:</label>
+                                            <select id="esfuerzo_mental" name="esfuerzo_mental" class="form-select"
+                                                required>
+                                                <option value="Rutina">Rutina</option>
+                                                <option value="Mediana">Mediana</option>
+                                                <option value="Definido">Definido</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="riesgo_accidente" class="form-label">Riesgo de
+                                                accidente:</label>
+                                            <select id="riesgo_accidente" name="riesgo_accidente" class="form-select"
+                                                required>
+                                                <option value="Nulo">Nulo</option>
+                                                <option value="Poco">Poco</option>
+                                                <option value="Regular">Regular</option>
+                                                <option value="Frecuente">Frecuente</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="ambiente" class="form-label"> Ambiente :</label>
+                                            <select id="ambiente" name="ambiente" class="form-select" required>
+                                                <option value="Normal Interno">Normal Interno</option>
+                                                <option value="Normal Exterior">Normal Exterior</option>
+                                                <option value="Deficiente Interno">Deficiente Interno</option>
+                                                <option value="Deficiente Exterior">Deficiente Exterior</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-header text-center mt-4">
+                                    <h2>Perfil del puesto</h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="edad" class="form-label">Edad:</label>
+                                            <input type="text" class="form-control" id="edad" name="edad" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="sexo" class="form-label">Sexo:</label>
+                                            <select id="sexo" name="sexo" class="form-select" required>
+                                                <option value="Femenino">Femenino</option>
+                                                <option value="Masculino">Masculino</option>
+                                                <option value="Indefinido">Indefinido</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="estado_civil" class="form-label">Estado Civil:</label>
+                                            <input type="text" class="form-control" id="estado_civil"
+                                                name="estado_civil" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="experiencia" class="form-label">Experiencia:</label>
+                                            <input type="text" class="form-control" id="experiencia" name="experiencia"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="escolaridad" class="form-label">Escolaridad:</label>
+                                            <input type="text" class="form-control" id="escolaridad" name="escolaridad"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="conocimientos" class="form-label">Conocimientos
+                                                Específicos:</label>
+                                            <small id="conocimientos" class="form-text text-muted">Escribe los
+                                                conocimientos separados por comas.</small>
+                                            <input type="text" class="form-control" id="conocimientos"
+                                                name="conocimientos" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Competencias Generales</h2>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <div>
+                                                <small id="CompGe" class="form-text text-muted">Escribe las Competencias
+                                                    Generales separadas por comas.</small>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <small id="emailHelp" class="form-text text-muted">A=Con alto dominio, B=
+                                                    Buen dominio, C= Mínimo esperado.</small>
+                                            </div>
+                                            <textarea class="form-control" id="CompGe" name="CompGe"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Competencias Específicas</h2>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <div>
+                                                <small id="CompEs" class="form-text text-muted">Escribe las Competencias
+                                                    Específicas separadas por comas.</small>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <small id="emailHelp" class="form-text text-muted">A=Con alto dominio, B=
+                                                    Buen dominio, C= Mínimo esperado.</small>
+                                            </div>
+                                            <textarea class="form-control" id="CompEs" name="CompEs"
+                                                required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-header text-center mt-4">
+                                    <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+        <!-- End Hero Section -->
+    </main>
+    <!-- End Main Content -->
+
+    <footer id="footer" class="footer position-relative">
+        <div class="container footer-top">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-4 footer-about">
+                    <a href="index.html" class="d-flex align-items-center">
+                        <span class="sitename">Universidad Tecnológica de Acapulco</span>
+                    </a>
+                    <div class="footer-contact pt-3">
+                        <p>Av. Comandante Bouganville L5</p>
+                        <p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 footer-links">
+                    <h4>Links útiles</h4>
+                    <ul>
+                        <li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
+                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a>
+                        </li>
+                        <p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
+                        <p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <h4>Síguenos</h4>
+                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate
+                        con nosotros en Facebook e Instagram </p>
+                    <div class="social-links d-flex">
+                        <a
+                            href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container copyright text-center mt-4">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos
+                    reservados</span></p>
+        </div>
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/php-email-form/validate.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/aos/aos.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/glightbox/js/glightbox.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.js') }}"></script>
+
+    <!-- Main JS File -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputFotoPerfil = document.getElementById('ubicacion');
+            inputFotoPerfil.addEventListener('change', previewImage);
+
+            function previewImage(event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var preview = document.getElementById('previewImage');
+                    preview.src = reader.result;
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
+    </script>
+</body>
+
+</html>
